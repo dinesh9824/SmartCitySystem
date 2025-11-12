@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+
+{% block title %}Electricity Bills & History - Smart City System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-bolt"></i> My Electricity Bills
+    </h2>
+    {% if user.is_staff %}
+    <a href="{% url 'add_electricity_bill' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New Bill
+    </a>
+    {% endif %}
+</div>
+
+<!-- Personal Statistics -->
+<div class="row mb-5">
+    <div class="col-12 text-center mb-4">
+        <h3 class="gradient-text fw-bold">
+            <i class="fas fa-chart-bar me-2"></i>Your Bill Statistics
+        </h3>
+        <p class="text-muted">Your personal electricity bill overview</p>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center position-relative overflow-hidden">
+            <div class="card-body p-4">
+                <div class="position-absolute top-0 end-0 p-3">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning opacity-25"></i>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10" style="width: 60px; height: 60px;">
+                        <i class="fas fa-exclamation-triangle fa-lg text-warning"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-warning mb-1">{{ user_due }}</h3>
+                <p class="text-muted mb-0 fw-semibold">Your Due Bills</p>
+                <small class="text-muted">Bills pending payment</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center position-relative overflow-hidden">
+            <div class="card-body p-4">
+                <div class="position-absolute top-0 end-0 p-3">
+                    <i class="fas fa-check fa-2x text-success opacity-25"></i>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10" style="width: 60px; height: 60px;">
+                        <i class="fas fa-check fa-lg text-success"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-success mb-1">{{ user_cleared }}</h3>
+                <p class="text-muted mb-0 fw-semibold">Your Cleared Bills</p>
+                <small class="text-muted">Bills paid successfully</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center position-relative overflow-hidden">
+            <div class="card-body p-4">
+                <div class="position-absolute top-0 end-0 p-3">
+                    <i class="fas fa-rupee-sign fa-2x text-info opacity-25"></i>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10" style="width: 60px; height: 60px;">
+                        <i class="fas fa-rupee-sign fa-lg text-info"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-info mb-1">₹{{ user_amount|floatformat:0 }}</h3>
+                <p class="text-muted mb-0 fw-semibold">Your Total Amount</p>
+                <small class="text-muted">All your bills combined</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center position-relative overflow-hidden">
+            <div class="card-body p-4">
+                <div class="position-absolute top-0 end-0 p-3">
+                    <i class="fas fa-list fa-2x text-primary opacity-25"></i>
+                </div>
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10" style="width: 60px; height: 60px;">
+                        <i class="fas fa-list fa-lg text-primary"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-primary mb-1">{{ user_total }}</h3>
+                <p class="text-muted mb-0 fw-semibold">Your Total Bills</p>
+                <small class="text-muted">All your electricity bills</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-history"></i> Your Bill History
+            </h5>
+            <div class="d-flex gap-2">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control form-control-sm" 
+                           placeholder="Search bills..." value="{{ search_query }}" style="width: 200px;">
+                    <select name="status" class="form-select form-select-sm" style="width: 120px;">
+                        <option value="">All Status</option>
+                        <option value="Due" {% if status_filter == 'Due' %}selected{% endif %}>Due</option>
+                        <option value="Cleared" {% if status_filter == 'Cleared' %}selected{% endif %}>Cleared</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    {% if search_query or status_filter %}
+                    <a href="{% url 'electricity_bills' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if search_query or status_filter %}
+        <div class="alert alert-info mb-3">
+            <i class="fas fa-info-circle"></i>
+            Showing filtered results
+            {% if search_query %}
+                for "{{ search_query }}"
+            {% endif %}
+            {% if status_filter %}
+                with status "{{ status_filter }}"
+            {% endif %}
+            ({{ bills|length }} bills found)
+        </div>
+        {% endif %}
+        
+        {% if bills %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Bill Number</th>
+                            <th>User</th>
+                            <th>Consumer Name</th>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bill in bills %}
+                        <tr {% if bill.user == user %}class="table-info"{% endif %}>
+                            <td>
+                                <strong>{{ bill.bill_number }}</strong>
+                                {% if bill.user == user %}
+                                    <span class="badge bg-primary ms-1">Yours</span>
+                                {% endif %}
+                                <br>
+                                <small class="text-muted">{{ bill.address|truncatechars:30 }}</small>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>{{ bill.user.get_full_name|default:bill.user.username }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ bill.user.email }}</small>
+                                </div>
+                            </td>
+                            <td>{{ bill.consumer_name }}</td>
+                            <td>
+                                <strong>₹{{ bill.amount }}</strong>
+                            </td>
+                            <td>{{ bill.due_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if bill.status == 'Due' %}
+                                    <span class="badge bg-warning">Due</span>
+                                {% elif bill.status == 'Cleared' %}
+                                    <span class="badge bg-success">Cleared</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ bill.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                {% if bill.user == user %}
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'edit_electricity_bill' bill.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if bill.status == 'Due' %}
+                                        <a href="{% url 'mark_bill_cleared' bill.id %}" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a href="{% url 'delete_electricity_bill' bill.id %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">View Only</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-bolt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No electricity bills found</h5>
+                {% if user.is_staff %}
+                    <p class="text-muted">Start by adding your first electricity bill to track payments.</p>
+                    <a href="{% url 'add_electricity_bill' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Your First Bill
+                    </a>
+                {% else %}
+                    <p class="text-muted">You don't have any electricity bills yet. Contact the administrator to add bills for you.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h6 class="card-title">
+            <i class="fas fa-info-circle"></i> Legend
+        </h6>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-1">
+                    <span class="badge bg-primary me-2">Yours</span>
+                    Bills that belong to you
+                </p>
+                <p class="mb-1">
+                    <span class="badge bg-warning me-2">Due</span>
+                    Bills that are pending payment
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1">
+                    <span class="badge bg-success me-2">Cleared</span>
+                    Bills that have been paid
+                </p>
+                <p class="mb-1">
+                    <span class="text-muted">View Only</span>
+                    Bills from other users (read-only)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

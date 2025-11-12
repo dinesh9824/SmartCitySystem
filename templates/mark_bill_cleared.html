@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Mark Bill as Cleared - Smart City System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-check"></i> Mark Bill as Cleared
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Confirm Payment!</strong> Are you sure you want to mark this electricity bill as cleared? This will update the bill status to "Cleared".
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Bill #{{ bill.bill_number }}</h6>
+                        <p class="card-text">
+                            <strong>Consumer:</strong> {{ bill.consumer_name }}<br>
+                            <strong>Amount:</strong> ₹{{ bill.amount }}<br>
+                            <strong>Due Date:</strong> {{ bill.due_date|date:"M d, Y" }}<br>
+                            <strong>Address:</strong> {{ bill.address }}
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <span class="badge bg-warning">Currently: {{ bill.get_status_display }}</span>
+                            <span class="text-muted">Created: {{ bill.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'electricity_bills' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Mark as Cleared
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

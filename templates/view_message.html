@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}View Message - Smart City System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-envelope-open"></i> {{ message.subject }}
+                </h4>
+                <span class="badge 
+                    {% if message.priority == 'Urgent' %}bg-danger
+                    {% elif message.priority == 'High' %}bg-warning
+                    {% elif message.priority == 'Medium' %}bg-info
+                    {% else %}bg-secondary{% endif %}">
+                    {{ message.priority }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>From:</strong> {{ message.sender.get_full_name|default:message.sender.username }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Date:</strong> {{ message.created_at|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Message:</strong>
+                </div>
+                <div class="bg-light p-3 rounded">
+                    {{ message.content|linebreaks }}
+                </div>
+                
+                {% if message.is_read and message.read_at %}
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Read on {{ message.read_at|date:"M d, Y H:i" }}
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'user_messages' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Messages
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

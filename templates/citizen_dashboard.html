@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Smart City System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-tachometer-alt"></i> Citizen Dashboard
+    </h2>
+    <a href="{% url 'add_complaint' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Submit New Complaint
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Pending</h6>
+                        <h4>{{ complaints|length }}</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">In Progress</h6>
+                        <h4>0</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-cog fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Resolved</h6>
+                        <h4>0</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title">Total</h6>
+                        <h4>{{ complaints|length }}</h4>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-list fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-list"></i> My Complaints
+        </h5>
+    </div>
+    <div class="card-body">
+        {% if complaints %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td>
+                                <strong>{{ complaint.title }}</strong>
+                                <br>
+                                <small class="text-muted">{{ complaint.description|truncatechars:50 }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary category-badge">{{ complaint.get_category_display }}</span>
+                            </td>
+                            <td>
+                                {% if complaint.status == 'Pending' %}
+                                    <span class="badge bg-warning status-pending">{{ complaint.get_status_display }}</span>
+                                {% elif complaint.status == 'In Progress' %}
+                                    <span class="badge bg-info status-in-progress">{{ complaint.get_status_display }}</span>
+                                {% elif complaint.status == 'Resolved' %}
+                                    <span class="badge bg-success status-resolved">{{ complaint.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'edit_complaint' complaint.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete_complaint' complaint.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No complaints submitted yet</h5>
+                <p class="text-muted">Start by submitting your first complaint to help improve our city.</p>
+                <a href="{% url 'add_complaint' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Submit Your First Complaint
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

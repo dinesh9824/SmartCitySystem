@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Smart City System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row mb-5">
+    <div class="col-lg-10 mx-auto">
+        <div class="jumbotron text-white rounded-4 p-5 mb-5 position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);"></div>
+            <div class="position-relative">
+                <h1 class="display-3 fw-bold mb-4">
+                    <i class="fas fa-city me-3"></i>Welcome to Smart City System
+                </h1>
+                <p class="lead fs-4 mb-4">Your digital gateway to a better city experience. Submit complaints, track progress, and help make our city smarter.</p>
+                <div class="d-flex align-items-center mb-4">
+                    <div class="me-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-users text-warning me-2"></i>
+                            <span class="fw-semibold">10,000+</span>
+                        </div>
+                        <small class="text-white-50">Active Citizens</small>
+                    </div>
+                    <div class="me-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="fw-semibold">95%</span>
+                        </div>
+                        <small class="text-white-50">Resolution Rate</small>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-info me-2"></i>
+                            <span class="fw-semibold">24/7</span>
+                        </div>
+                        <small class="text-white-50">Support</small>
+                    </div>
+                </div>
+                {% if not user.is_authenticated %}
+                <div class="d-flex flex-wrap gap-3">
+                    <a class="btn btn-light btn-lg px-4 py-3 rounded-pill" href="{% url 'register' %}" role="button">
+                        <i class="fas fa-rocket me-2"></i>Get Started
+                    </a>
+                    <a class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill" href="{% url 'login' %}" role="button">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+                {% else %}
+                <div class="d-flex flex-wrap gap-3">
+                    <a class="btn btn-light btn-lg px-4 py-3 rounded-pill" href="{% url 'citizen_dashboard' %}" role="button">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </a>
+                    <a class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill" href="{% url 'add_complaint' %}" role="button">
+                        <i class="fas fa-plus me-2"></i>Submit Complaint
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-12 text-center mb-5">
+        <h2 class="gradient-text display-5 fw-bold">Why Choose Our Platform?</h2>
+        <p class="lead text-muted">Experience the future of city management</p>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 stat-card border-0">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10" style="width: 80px; height: 80px;">
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                    </div>
+                </div>
+                <h5 class="card-title fw-bold">Submit Complaints</h5>
+                <p class="card-text text-muted">Report issues with water, waste, electricity, roads, and other city services quickly and easily with our intuitive interface.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark text-warning">Real-time Tracking</span>
+                </div>
+
+                <div class="mt-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'add_complaint' %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-plus me-2"></i>Submit Complaint
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-user-plus me-2"></i>Get Started
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 stat-card border-0">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10" style="width: 80px; height: 80px;">
+                        <i class="fas fa-chart-line fa-2x text-info"></i>
+                    </div>
+                </div>
+                <h5 class="card-title fw-bold">Track Progress</h5>
+                <p class="card-text text-muted">Monitor the status of your complaints in real-time and receive updates via email notifications and dashboard alerts.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark text-warning">Live Updates</span>
+                </div>
+                <div class="mt-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'citizen_dashboard' %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Track
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 stat-card border-0">
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10" style="width: 80px; height: 80px;">
+                        <i class="fas fa-users fa-2x text-success"></i>
+                    </div>
+                </div>
+                <h5 class="card-title fw-bold">Community Impact</h5>
+                <p class="card-text text-muted">Be part of a community that's actively working to improve our city's infrastructure and services for everyone.</p>
+                <div class="mt-3">
+                    <span class="badge bg-dark text-warning">Community Driven</span>
+                </div>
+                <div class="mt-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'citizen_dashboard' %}" class="btn btn-success btn-sm">
+                            <i class="fas fa-chart-bar me-2"></i>View Impact
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-success btn-sm">
+                            <i class="fas fa-users me-2"></i>Join Community
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0">
+            <div class="card-header bg-transparent border-0 text-center py-4">
+                <h3 class="gradient-text fw-bold mb-2">How It Works</h3>
+                <p class="text-muted">Simple steps to make your city better</p>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-3 text-center">
+                        <div class="position-relative">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold fs-4 mb-3" style="width: 60px; height: 60px;">
+                                1
+                            </div>
+                            <div class="position-absolute top-0 start-50 translate-middle-x d-none d-md-block" style="width: 100%; height: 2px; background: var(--primary-gradient); transform: translateX(50%);"></div>
+                        </div>
+                        <h6 class="fw-bold">Register</h6>
+                        <small class="text-muted">Create your account</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="position-relative">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold fs-4 mb-3" style="width: 60px; height: 60px;">
+                                2
+                            </div>
+                            <div class="position-absolute top-0 start-50 translate-middle-x d-none d-md-block" style="width: 100%; height: 2px; background: var(--primary-gradient); transform: translateX(50%);"></div>
+                        </div>
+                        <h6 class="fw-bold">Submit</h6>
+                        <small class="text-muted">Report your issue</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="position-relative">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold fs-4 mb-3" style="width: 60px; height: 60px;">
+                                3
+                            </div>
+                            <div class="position-absolute top-0 start-50 translate-middle-x d-none d-md-block" style="width: 100%; height: 2px; background: var(--primary-gradient); transform: translateX(50%);"></div>
+                        </div>
+                        <h6 class="fw-bold">Track</h6>
+                        <small class="text-muted">Monitor progress</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold fs-4 mb-3" style="width: 60px; height: 60px;">
+                                4
+                            </div>
+                        </div>
+                        <h6 class="fw-bold">Resolve</h6>
+                        <small class="text-muted">Issue gets fixed</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row mb-5">
+    <div class="col-12 text-center mb-4">
+        <h3 class="gradient-text fw-bold">Platform Statistics</h3>
+        <p class="text-muted">Numbers that speak for themselves</p>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                </div>
+                <h3 class="fw-bold text-warning">2,500+</h3>
+                <p class="text-muted mb-0">Complaints Resolved</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-bolt fa-3x text-info"></i>
+                </div>
+                <h3 class="fw-bold text-info">1,200+</h3>
+                <p class="text-muted mb-0">Bills Processed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-users fa-3x text-success"></i>
+                </div>
+                <h3 class="fw-bold text-success">10,000+</h3>
+                <p class="text-muted mb-0">Active Users</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stat-card border-0 text-center">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <i class="fas fa-star fa-3x text-warning"></i>
+                </div>
+                <h3 class="fw-bold text-warning">4.8/5</h3>
+                <p class="text-muted mb-0">User Rating</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+{% if not user.is_authenticated %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card border-0 text-center" style="background: var(--primary-gradient);">
+            <div class="card-body p-5 text-white">
+                <h3 class="fw-bold mb-3">Ready to Make a Difference?</h3>
+                <p class="lead mb-4">Join thousands of citizens who are already using our platform to improve city services.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a class="btn btn-light btn-lg px-4 py-3 rounded-pill" href="{% url 'register' %}">
+                        <i class="fas fa-user-plus me-2"></i>Join Now
+                    </a>
+                    <a class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
