@@ -220,64 +220,6 @@ python manage.py runserver
    git push -u origin main
    ```
 
-2. **Create a new Web Service on Render:**
-   - Go to [Render Dashboard](https://dashboard.render.com/)
-   - Click "New +" → "Web Service"
-   - Connect your GitHub repository
-   - Select your repository
-
-3. **Configure the service:**
-   - **Name**: smart-city-system (or your preferred name)
-   - **Environment**: Python 3
-   - **Build Command**: `chmod +x build.sh && ./build.sh`
-   - **Start Command**: `gunicorn SmartCitySystem.wsgi:application`
-   - **Root Directory**: `SmartCitySystem` (if your project is in a subdirectory)
-
-4. **Add Environment Variables:**
-   Click "Add Environment Variable" and add:
-   - `SECRET_KEY`: Generate a new secret key (you can use Django's `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`)
-   - `DEBUG`: `False`
-   - `ALLOWED_HOSTS`: `your-app-name.onrender.com` (Render will provide this)
-   - `DATABASE_URL`: (Automatically provided by Render if you add a PostgreSQL database)
-
-5. **Add PostgreSQL Database (Optional but Recommended):**
-   - In Render Dashboard, click "New +" → "PostgreSQL"
-   - Create a new database
-   - Render will automatically provide the `DATABASE_URL` environment variable
-   - The app will automatically use PostgreSQL if `DATABASE_URL` is set
-
-6. **Deploy:**
-   - Click "Create Web Service"
-   - Render will automatically build and deploy your application
-   - The first deployment may take a few minutes
-
-### Post-Deployment
-
-1. **Run migrations on Render:**
-   - Go to your service → "Shell" tab
-   - Run: `python manage.py migrate`
-
-2. **Create superuser:**
-   - In the Shell tab, run: `python manage.py createsuperuser`
-   - Follow the prompts to create an admin account
-
-3. **Access your application:**
-   - Your app will be available at `https://your-app-name.onrender.com`
-
-### Important Notes
-
-- **Static Files**: WhiteNoise is configured to serve static files automatically
-- **Database**: The app uses SQLite locally and PostgreSQL on Render
-- **Environment Variables**: Never commit `.env` file to Git
-- **Secret Key**: Always use a strong, unique secret key in production
-- **Debug Mode**: Keep `DEBUG=False` in production for security
-
-### Troubleshooting Deployment
-
-- **Build fails**: Check the build logs in Render dashboard
-- **Static files not loading**: Ensure `STATIC_ROOT` is set and `collectstatic` runs during build
-- **Database errors**: Verify `DATABASE_URL` is set correctly
-- **500 errors**: Check Render logs and ensure all environment variables are set
 
 ## Support
 
